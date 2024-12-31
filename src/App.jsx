@@ -5,7 +5,7 @@ function App() {
   
   return (
     <>
-    <div dir='rtl'>
+    <div dir='rtl' className='pr-32 pl-32 pt-10 pb-10'>
     <Router>
       <SideBar />
       <Routes>
