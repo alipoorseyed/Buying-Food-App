@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createContext , useContext } from "react";
 
 const RoleContext = createContext(undefined);
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useRoleContext = () => {
     const context = useContext(RoleContext);
     if (!context) {
@@ -14,8 +15,16 @@ export const useRoleContext = () => {
 
 
 
-  export const RoleProvider = (children) => {
+  // eslint-disable-next-line react/prop-types
+  export const RoleProvider = ({children}) => {
     const [role , setrole] = useState("");
+
+    useEffect(() => {
+      const tempRole = localStorage.getItem("Role");
+      if(tempRole){
+        setrole(tempRole);
+      }
+    },[])
   
     return (
       <RoleContext.Provider value={{role,setrole}}>
