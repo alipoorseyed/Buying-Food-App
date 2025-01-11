@@ -36,6 +36,32 @@ db.query('CALL GetManagerById(?)', [1], (err, results) => {
 });
 
 
+app.post("/Login/Manager", (req, res) => {
+    const { email, password } = req.body;
+
+    db.execute('CALL LoginManager(?, ?)', [email, password], (err, result) => {
+        if (err) {
+            console.error('Error logging in:', err);
+            return res.status(500).json({ message: 'Error during login', error: err });
+        }
+
+        const manager = result[0][0]; 
+        if (manager) {
+            res.status(200).json({
+                message: 'Login successful',
+                ManagerId: manager.ManagerId,
+                ManagerName: manager.ManagerName,
+                ManagerFamilyName: manager.ManagerFamilyName,
+                ManagerEmail: manager.ManagerEmail,
+                ManagerPhoneNumber: manager.ManagerPhoneNumber,
+            });
+        } else {
+            res.status(401).json({ message: 'Invalid email or password' });
+        }
+    });
+});
+
+
 
 app.post("/SignUp/Manager", (req, res) =>{
     const {name, familyName, email, password, phoneNumber} = req.body;
