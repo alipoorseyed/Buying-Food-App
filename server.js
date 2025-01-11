@@ -32,30 +32,51 @@ db.query('CALL GetManagerById(?)', [1], (err, results) => {
         return;
     }
 
-    console.log('User Details:', results[0]);  
+    console.log('User Details:', results[0]);
 });
 
 
 
-app.post("/signUp/Manager", (req, res) =>{
+app.post("/SignUp/Manager", (req, res) =>{
     const {name, familyName, email, password, phoneNumber} = req.body;
-  
-    db.execute('CALL AddManager(?,?,?,?,?)', [name, familyName, email, password, phoneNumber], (err, result) => {
-        if (err) {
-        console.error('Error inserting user:', err);
-        res.status(500).json({ message: 'Error saving user', error: err });
-        } else {
-        res.status(201).json({
-            Managerid: result.insertId,
-            ManagerName: name,
-            ManagerFamilyName: familyName,
-            ManagerEmail: email,
-            ManagerPassword: password,
-            ManagerPhoneNumber: phoneNumber,
-        });
-        }
-    });
 
+    db.execute('CALL SignupManagerCheck(?)', [email], (err, result) => {
+        if (err) {
+            console.error('Error checking email:', err);
+            return res.status(500).json({ message: 'Error checking email', error: err });
+        }
+
+        const emailExists = result[0][0]?.EmailExists || 0; 
+
+        if (emailExists > 0) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
+        db.execute('CALL AddManager(?,?,?,?,?)', [name, familyName, email, password, phoneNumber], (err, result) => {
+            if (err) {
+                console.error('Error inserting user:', err);
+                res.status(500).json({ message: 'Error saving user', error: err });
+            } else {
+                res.status(201).json({
+                    Managerid: result.insertId,
+                    ManagerName: name,
+                    ManagerFamilyName: familyName,
+                    ManagerEmail: email,
+                    ManagerPassword: password,
+                    ManagerPhoneNumber: phoneNumber,
+                });
+            }
+        });
+    });
+});
+
+
+app.post("/LogIn/Admin", (req, res) =>{
+    const {userName, password} = req.body
+
+    if(userName == 'admin' && password == "admin"){
+        res.status(201).json({ message: 'Login successfull'})
+    }
 });
 
 
