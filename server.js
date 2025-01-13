@@ -66,6 +66,10 @@ app.post("/Login/Manager", (req, res) => {
 app.post("/SignUp/Manager", (req, res) =>{
     const {name, familyName, email, password, phoneNumber} = req.body;
 
+    if (!name || !familyName || !email || !password || !phoneNumber) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
     db.execute('CALL SignupManagerCheck(?)', [email], (err, result) => {
         if (err) {
             console.error('Error checking email:', err);
