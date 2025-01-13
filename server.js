@@ -26,7 +26,7 @@ db.connect((err) => {
     console.log('Connected to the database as id ' + db.threadId);
 });
 
-db.query('CALL GetManagerById(?)', [1], (err, results) => {
+db.query('CALL GetCustomerById(?)', [1], (err, results) => {
     if (err) {
         console.error('Error executing stored procedure: ' + err.stack);
         return;
@@ -84,12 +84,40 @@ app.post("/SignUp/Manager", (req, res) =>{
                 res.status(500).json({ message: 'Error saving user', error: err });
             } else {
                 res.status(201).json({
-                    Managerid: result.insertId,
-                    ManagerName: name,
-                    ManagerFamilyName: familyName,
-                    ManagerEmail: email,
-                    ManagerPassword: password,
-                    ManagerPhoneNumber: phoneNumber,
+                    Managerid: result[0][0].Id
+                });
+            }
+        });
+    });
+});
+
+
+app.post("/SignUp/Customer", (req, res) =>{
+    const {name, familyName, email, password, phoneNumber, address, city} = req.body;
+
+    if (!name || !familyName || !email || !password || !phoneNumber || !address || !city) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL SignupCustomerCheck(?)', [email], (err, result) => {
+        if (err) {
+            console.error('Error checking email:', err);
+            return res.status(500).json({ message: 'Error checking email', error: err });
+        }
+
+        const emailExists = result[0][0]?.EmailExists || 0; 
+
+        if (emailExists > 0) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
+        db.execute('CALL AddCustomer(?,?,?,?,?,?,?)', [name, familyName, email, password, phoneNumber, address, city], (err, result) => {
+            if (err) {
+                console.error('Error inserting user:', err);
+                res.status(500).json({ message: 'Error saving user', error: err });
+            } else {
+                res.status(201).json({
+                    CustomerId: result[0][0].Id
                 });
             }
         });
