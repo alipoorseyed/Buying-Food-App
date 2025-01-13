@@ -39,6 +39,10 @@ db.query('CALL GetCustomerById(?)', [1], (err, results) => {
 app.post("/Login/Manager", (req, res) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
     db.execute('CALL LoginManager(?, ?)', [email, password], (err, result) => {
         if (err) {
             console.error('Error logging in:', err);
@@ -88,7 +92,7 @@ app.post("/SignUp/Manager", (req, res) =>{
                 res.status(500).json({ message: 'Error saving user', error: err });
             } else {
                 res.status(201).json({
-                    Managerid: result[0][0].Id
+                    ManagerId: result[0][0].Id
                 });
             }
         });
