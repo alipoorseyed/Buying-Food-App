@@ -133,6 +133,32 @@ app.post("/SignUp/Customer", (req, res) =>{
 });
 
 
+app.post("/LogIn/User", (req, res) =>{
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL LoginCustomer(?, ?)', [email, password], (err, result) => {
+        if (err) {
+            console.error('Error logging in:', err);
+            return res.status(500).json({ message: 'Error during login', error: err });
+        }
+
+        const customer = result[0][0]; 
+        if (customer) {
+            res.status(200).json({
+                message: 'Login successful',
+                CustomerId: customer.CustomerId
+            });
+        } else {
+            res.status(401).json({ message: 'Invalid email or password' });
+        }
+    });
+});
+
+
 app.post("/LogIn/Admin", (req, res) =>{
     const {userName, password} = req.body
 
