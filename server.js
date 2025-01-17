@@ -133,7 +133,7 @@ app.post("/SignUp/Customer", (req, res) =>{
 });
 
 
-app.post("/LogIn/User", (req, res) =>{
+app.post("/LogIn/Customer", (req, res) =>{
     const { email, password } = req.body;
 
     if (!email || !password) {
