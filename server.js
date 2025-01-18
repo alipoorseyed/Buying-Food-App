@@ -120,8 +120,8 @@ app.post("/SignUp/Customer", (req, res) =>{
 
         db.execute('CALL AddCustomer(?,?,?,?,?,?,?)', [name, familyName, email, password, phoneNumber, address, city], (err, result) => {
             if (err) {
-                console.error('Error inserting user:', err);
-                res.status(500).json({ message: 'Error saving user', error: err });
+                console.error('Error inserting Customer:', err);
+                res.status(500).json({ message: 'Error saving Customer', error: err });
             } else {
                 res.status(201).json({
                     CustomerId: result[0][0].Id
