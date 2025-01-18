@@ -66,7 +66,6 @@ app.post("/Login/Manager", (req, res) => {
 });
 
 
-
 app.post("/SignUp/Manager", (req, res) =>{
     const {name, familyName, email, password, phoneNumber} = req.body;
 
@@ -165,6 +164,27 @@ app.post("/LogIn/Admin", (req, res) =>{
     if(userName == 'admin' && password == "admin"){
         res.status(201).json({ message: 'Login successfull'})
     }
+});
+
+
+app.post("/AddRestaurant", (req, res) =>{
+    const {managerId, name, address, city, limitBuy, deliveryFee, profilePicture} = req.body;
+
+    if (!managerId || !name || !address || !city || !limitBuy || !deliveryFee || !profilePicture) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+
+    db.execute('CALL AddRestaurant(?,?,?,?,?,?,?)', [managerId, name, address, city, limitBuy, deliveryFee, profilePicture], (err, result) => {
+        if (err) {
+            console.error('Error inserting restaurant:', err);
+            res.status(500).json({ message: 'Error saving restaurant', error: err });
+        } else {
+            res.status(201).json({
+                RestaurantId: result[0][0].Id
+            });
+        }
+    });
 });
 
 
