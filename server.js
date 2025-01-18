@@ -87,8 +87,8 @@ app.post("/SignUp/Manager", (req, res) =>{
 
         db.execute('CALL AddManager(?,?,?,?,?)', [name, familyName, email, password, phoneNumber], (err, result) => {
             if (err) {
-                console.error('Error inserting user:', err);
-                res.status(500).json({ message: 'Error saving user', error: err });
+                console.error('Error inserting Manager:', err);
+                res.status(500).json({ message: 'Error saving Manager', error: err });
             } else {
                 res.status(201).json({
                     ManagerId: result[0][0].Id
