@@ -215,26 +215,26 @@ app.post("/AddAddress", (req, res) =>{
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL AddCustomer(?,?,?,?,?,?,?)', [CustomerId, AddressCity, Address], (err, result) => {
+    db.execute('CALL AddAddress(?,?,?)', [CustomerId, AddressCity, Address], (err, result) => {
         if (err) {
             console.error('Error inserting Address:', err);
             res.status(500).json({ message: 'Error saving Address', error: err });
         } else {
             res.status(201).json({
-                CustomerId: result[0][0].Id
+                AddressId: result[0][0].Id
             });
         }
     });
 });
 
 
-app.post("AddManager", (req, res) =>{
+app.post("/AddManager", (req, res) =>{
     const {name, familyName, email, password, phoneNumber} = req.body;
 
     if (!name || !familyName || !email || !password || !phoneNumber) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-    
+
     db.execute('CALL AddManager(?,?,?,?,?)', [name, familyName, email, password, phoneNumber], (err, result) => {
         if (err) {
             console.error('Error inserting Manager:', err);
@@ -247,6 +247,25 @@ app.post("AddManager", (req, res) =>{
     });
 });
 
+
+app.post("/AddItem", (req, res) =>{
+    const {RestaurantId, ItemName, ItemPrice} = req.body;
+
+    if (!RestaurantId || !ItemName || !ItemPrice) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL AddItem(?,?,?)', [RestaurantId, ItemName, ItemPrice], (err, result) => {
+        if (err) {
+            console.error('Error inserting Item:', err);
+            res.status(500).json({ message: 'Error saving Item', error: err });
+        } else {
+            res.status(201).json({
+                ItemId: result[0][0].Id
+            });
+        }
+    });
+});
 
 
 app.listen(port, () =>{
