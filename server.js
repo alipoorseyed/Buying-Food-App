@@ -308,6 +308,18 @@ app.post("/UpdateCustomer", (req, res) =>{
 });
 
 
+app.get("/AllRestaurants", (req, res) =>{
+
+    db.execute('CALL SelectAllRestaurant()', (err, results) => {
+        if (err) {
+            console.error('Error getting restaurants:', err);
+            return res.status(500).json({ message: 'Error getting restaurants', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
 app.listen(port, () =>{
     console.log(`Server running at http://localhost:${port}`);
 });
