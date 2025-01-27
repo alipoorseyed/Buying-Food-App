@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useThemContext } from "../hooks/ThemContext";
 
 export const SideBar = () => {
      const {them , setthem} = useThemContext();
+     const navigate = useNavigate();
      const changeThem = () => {
         if(them === "light"){
           localStorage.setItem("them","dark")
@@ -32,7 +34,7 @@ export const SideBar = () => {
         </div>
         <div className="flex justify-center items-center gap-4 cursor-pointer">
           <span className="material-icons text-black">logout</span>
-          <span className="hidden group-hover:block">خروج</span>
+          <span onClick={() => navigate("/")} className="hidden group-hover:block">خروج</span>
         </div>
       </div>
     </div>

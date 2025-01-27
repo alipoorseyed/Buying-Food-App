@@ -208,7 +208,24 @@ app.post("/AddCustomer", (req, res) =>{
 });
 
 
+app.post("/AddAddress", (req, res) =>{
+    const {CustomerId, AddressCity, Address} = req.body;
 
+    if (!CustomerId|| !AddressCity || !Address) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL AddCustomer(?,?,?,?,?,?,?)', [CustomerId, AddressCity, Address], (err, result) => {
+        if (err) {
+            console.error('Error inserting Address:', err);
+            res.status(500).json({ message: 'Error saving Address', error: err });
+        } else {
+            res.status(201).json({
+                CustomerId: result[0][0].Id
+            });
+        }
+    });
+});
 
 
 app.listen(port, () =>{
