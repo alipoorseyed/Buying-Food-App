@@ -228,6 +228,27 @@ app.post("/AddAddress", (req, res) =>{
 });
 
 
+app.post("AddManager", (req, res) =>{
+    const {name, familyName, email, password, phoneNumber} = req.body;
+
+    if (!name || !familyName || !email || !password || !phoneNumber) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+    
+    db.execute('CALL AddManager(?,?,?,?,?)', [name, familyName, email, password, phoneNumber], (err, result) => {
+        if (err) {
+            console.error('Error inserting Manager:', err);
+            res.status(500).json({ message: 'Error saving Manager', error: err });
+        } else {
+            res.status(201).json({
+                ManagerId: result[0][0].Id
+            });
+        }
+    });
+});
+
+
+
 app.listen(port, () =>{
     console.log(`Server running at http://localhost:${port}`);
 });
