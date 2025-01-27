@@ -188,6 +188,29 @@ app.post("/AddRestaurant", (req, res) =>{
 });
 
 
+app.post("/AddCustomer", (req, res) =>{
+    const {name, familyName, email, password, phoneNumber, address, city} = req.body;
+
+    if (!name || !familyName || !email || !password || !phoneNumber || !address || !city) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL AddCustomer(?,?,?,?,?,?,?)', [name, familyName, email, password, phoneNumber, address, city], (err, result) => {
+        if (err) {
+            console.error('Error inserting Customer:', err);
+            res.status(500).json({ message: 'Error saving Customer', error: err });
+        } else {
+            res.status(201).json({
+                CustomerId: result[0][0].Id
+            });
+        }
+    });
+});
+
+
+
+
+
 app.listen(port, () =>{
     console.log(`Server running at http://localhost:${port}`);
 });
