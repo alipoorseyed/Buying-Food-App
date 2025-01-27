@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import mysql2 from "mysql2";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -282,6 +282,26 @@ app.post("/AddSchedule", (req, res) =>{
         } else {
             res.status(201).json({
                 ScheduleId: result[0][0].Id
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateCustomer", (req, res) =>{
+    const {id, name, familyName, email, password, phoneNumber, address, city} = req.body;
+
+    if (!id || !name || !familyName || !email || !password || !phoneNumber || !address || !city) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateCustomer(?,?,?,?,?,?,?,?)', [id, name, familyName, email, password, phoneNumber, address, city], (err, result) => {
+        if (err) {
+            console.error('Error updating Customer:', err);
+            res.status(500).json({ message: 'Error updating Customer', error: err });
+        } else {
+            res.status(201).json({
+                result
             });
         }
     });
