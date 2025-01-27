@@ -320,6 +320,19 @@ app.get("/AllRestaurants", (req, res) =>{
 });
 
 
+app.get("/GetItemsOFResturant", (req, res) =>{
+    const restaurantId = req.body;
+
+    db.execute('CALL GetItemsOfRestaurant(?)', [restaurantId], (err, results) => {
+        if (err) {
+            console.error('Error getting items for restaurant:', err);
+            return res.status(500).json({ message: 'Error getting items', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
 app.listen(port, () =>{
     console.log(`Server running at http://localhost:${port}`);
 });
