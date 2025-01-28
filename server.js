@@ -308,7 +308,7 @@ app.post("/UpdateCustomer", (req, res) =>{
 });
 
 
-app,post("/UpdateManager", (req, res) =>{
+app.post("/UpdateManager", (req, res) =>{
     const {id, name, familyName, email, password, phoneNumber} = req.body;
 
     if (!id || !name || !familyName || !email || !password || !phoneNumber) {
@@ -325,7 +325,28 @@ app,post("/UpdateManager", (req, res) =>{
             });
         }
     });
-})
+});
+
+
+app.post("/UpdateRestaurant", (req,res) =>{
+    const {id, managerId, name, address, city, limitBuy, deliveryFee, profilePicture} = req.body;
+
+    if (!id || !managerId || !name || !address || !city || !limitBuy || !deliveryFee || !profilePicture) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+
+    db.execute('CALL UpdateRestaurant(?,?,?,?,?,?,?,?)', [id, managerId, name, address, city, limitBuy, deliveryFee, profilePicture], (err, result) => {
+        if (err) {
+            console.error('Error Updating restaurant:', err);
+            res.status(500).json({ message: 'Error Updating restaurant', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
 
 
 app.get("/AllRestaurants", (req, res) =>{
