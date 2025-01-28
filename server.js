@@ -389,6 +389,26 @@ app.post("/UpdateItem", (req, res) =>{
 });
 
 
+app.post("/UpdateSchedule", (req, res) =>{
+    const {id, RestaurantId, ItemName, ItemPrice} = req.body;
+
+    if (!id || !RestaurantId || !ItemName || !ItemPrice) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateSchedule(?,?,?)', [id, ItemName, ItemPrice], (err, result) => {
+        if (err) {
+            console.error('Error inserting Schedule:', err);
+            res.status(500).json({ message: 'Error saving Schedule', error: err });
+        } else {
+            res.status(201).json({
+                ScheduleId: result[0][0].Id
+            });
+        }
+    });
+});
+
+
 app.get("/AllRestaurants", (req, res) =>{
 
     db.execute('CALL SelectAllRestaurant()', (err, results) => {
