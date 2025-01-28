@@ -308,6 +308,26 @@ app.post("/UpdateCustomer", (req, res) =>{
 });
 
 
+app,post("/UpdateManager", (req, res) =>{
+    const {id, name, familyName, email, password, phoneNumber} = req.body;
+
+    if (!id || !name || !familyName || !email || !password || !phoneNumber) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateManager(?,?,?,?,?,?)', [id, name, familyName, email, password, phoneNumber], (err, result) => {
+        if (err) {
+            console.error('Error Updating Manager:', err);
+            res.status(500).json({ message: 'Error Updating Manager', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+})
+
+
 app.get("/AllRestaurants", (req, res) =>{
 
     db.execute('CALL SelectAllRestaurant()', (err, results) => {
