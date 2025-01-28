@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import mysql2 from "mysql2";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -264,6 +264,132 @@ app.post("/AddItem", (req, res) =>{
                 ItemId: result[0][0].Id
             });
         }
+    });
+});
+
+
+app.post("/AddSchedule", (req, res) =>{
+    const {RestaurantId, ItemName, ItemPrice} = req.body;
+
+    if (!RestaurantId || !ItemName || !ItemPrice) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL AddSchedule(?,?,?)', [RestaurantId, ItemName, ItemPrice], (err, result) => {
+        if (err) {
+            console.error('Error inserting Schedule:', err);
+            res.status(500).json({ message: 'Error saving Schedule', error: err });
+        } else {
+            res.status(201).json({
+                ScheduleId: result[0][0].Id
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateCustomer", (req, res) =>{
+    const {id, name, familyName, email, password, phoneNumber, address, city} = req.body;
+
+    if (!id || !name || !familyName || !email || !password || !phoneNumber || !address || !city) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateCustomer(?,?,?,?,?,?,?,?)', [id, name, familyName, email, password, phoneNumber, address, city], (err, result) => {
+        if (err) {
+            console.error('Error updating Customer:', err);
+            res.status(500).json({ message: 'Error updating Customer', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateManager", (req, res) =>{
+    const {id, name, familyName, email, password, phoneNumber} = req.body;
+
+    if (!id || !name || !familyName || !email || !password || !phoneNumber) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateManager(?,?,?,?,?,?)', [id, name, familyName, email, password, phoneNumber], (err, result) => {
+        if (err) {
+            console.error('Error Updating Manager:', err);
+            res.status(500).json({ message: 'Error Updating Manager', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateRestaurant", (req,res) =>{
+    const {id, managerId, name, address, city, limitBuy, deliveryFee, profilePicture} = req.body;
+
+    if (!id || !managerId || !name || !address || !city || !limitBuy || !deliveryFee || !profilePicture) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+
+    db.execute('CALL UpdateRestaurant(?,?,?,?,?,?,?,?)', [id, managerId, name, address, city, limitBuy, deliveryFee, profilePicture], (err, result) => {
+        if (err) {
+            console.error('Error Updating restaurant:', err);
+            res.status(500).json({ message: 'Error Updating restaurant', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateAddress", (req, res) =>{
+    const {id, CustomerId, AddressCity, Address} = req.body;
+
+    if (!id || !CustomerId|| !AddressCity || !Address) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateAddress(?,?,?,?)', [id, CustomerId, AddressCity, Address], (err, result) => {
+        if (err) {
+            console.error('Error Updating Address:', err);
+            res.status(500).json({ message: 'Error Updating Address', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.get("/AllRestaurants", (req, res) =>{
+
+    db.execute('CALL SelectAllRestaurant()', (err, results) => {
+        if (err) {
+            console.error('Error getting restaurants:', err);
+            return res.status(500).json({ message: 'Error getting restaurants', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
+app.get("/GetItemsOFResturant", (req, res) =>{
+    const restaurantId = req.body;
+
+    db.execute('CALL GetItemsOfRestaurant(?)', [restaurantId], (err, results) => {
+        if (err) {
+            console.error('Error getting items for restaurant:', err);
+            return res.status(500).json({ message: 'Error getting items', error: err });
+        }
+        res.status(200).json(results[0]);
     });
 });
 
