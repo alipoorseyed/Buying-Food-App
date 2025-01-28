@@ -349,6 +349,26 @@ app.post("/UpdateRestaurant", (req,res) =>{
 });
 
 
+app.post("/UpdateAddress", (req, res) =>{
+    const {id, CustomerId, AddressCity, Address} = req.body;
+
+    if (!id || !CustomerId|| !AddressCity || !Address) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateAddress(?,?,?,?)', [id, CustomerId, AddressCity, Address], (err, result) => {
+        if (err) {
+            console.error('Error Updating Address:', err);
+            res.status(500).json({ message: 'Error Updating Address', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
 app.get("/AllRestaurants", (req, res) =>{
 
     db.execute('CALL SelectAllRestaurant()', (err, results) => {
