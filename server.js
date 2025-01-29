@@ -490,17 +490,17 @@ app.post("/DeleteAddress", (req, res) =>{
 });
 
 
-app.post("/UpdateItem", (req, res) =>{
-    const {id, RestaurantId, ItemName, ItemPrice} = req.body;
+app.post("/DeleteItem", (req, res) =>{
+    const {id} = req.body;
 
-    if (!id || !RestaurantId || !ItemName || !ItemPrice) {
+    if (!id) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL UpdateItem(?,?,?,?)', [id, RestaurantId, ItemName, ItemPrice], (err, result) => {
+    db.execute('CALL DeleteItem(?)', [id], (err, result) => {
         if (err) {
-            console.error('Error Updating Item:', err);
-            res.status(500).json({ message: 'Error Updating Item', error: err });
+            console.error('Error Deleting Item:', err);
+            res.status(500).json({ message: 'Error Deleting Item', error: err });
         } else {
             res.status(201).json({
                 result
