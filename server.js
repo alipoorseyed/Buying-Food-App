@@ -35,6 +35,7 @@ db.query('CALL GetCustomerById(?)', [1], (err, results) => {
     console.log('User Details:', results[0]);
 });
 
+//-------------------------------------------------------------------------------------------
 
 app.post("/Login/Manager", (req, res) => {
     const { email, password } = req.body;
@@ -166,6 +167,7 @@ app.post("/LogIn/Admin", (req, res) =>{
     }
 });
 
+//-------------------------------------------------------------------------------------------
 
 app.post("/AddRestaurant", (req, res) =>{
     const {managerId, name, address, city, limitBuy, deliveryFee, profilePicture} = req.body;
@@ -173,7 +175,6 @@ app.post("/AddRestaurant", (req, res) =>{
     if (!managerId || !name || !address || !city || !limitBuy || !deliveryFee || !profilePicture) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-
 
     db.execute('CALL AddRestaurant(?,?,?,?,?,?,?)', [managerId, name, address, city, limitBuy, deliveryFee, profilePicture], (err, result) => {
         if (err) {
@@ -287,6 +288,7 @@ app.post("/AddSchedule", (req, res) =>{
     });
 });
 
+//-------------------------------------------------------------------------------------------
 
 app.post("/UpdateCustomer", (req, res) =>{
     const {id, name, familyName, email, password, phoneNumber, address, city} = req.body;
@@ -335,7 +337,6 @@ app.post("/UpdateRestaurant", (req,res) =>{
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-
     db.execute('CALL UpdateRestaurant(?,?,?,?,?,?,?,?)', [id, managerId, name, address, city, limitBuy, deliveryFee, profilePicture], (err, result) => {
         if (err) {
             console.error('Error Updating restaurant:', err);
@@ -368,6 +369,241 @@ app.post("/UpdateAddress", (req, res) =>{
     });
 });
 
+
+app.post("/UpdateItem", (req, res) =>{
+    const {id, RestaurantId, ItemName, ItemPrice} = req.body;
+
+    if (!id || !RestaurantId || !ItemName || !ItemPrice) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateItem(?,?,?,?)', [id, RestaurantId, ItemName, ItemPrice], (err, result) => {
+        if (err) {
+            console.error('Error Updating Item:', err);
+            res.status(500).json({ message: 'Error Updating Item', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateSchedule", (req, res) =>{
+    const {id, RestaurantId, ItemName, ItemPrice} = req.body;
+
+    if (!id || !RestaurantId || !ItemName || !ItemPrice) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateSchedule(?,?,?)', [id, ItemName, ItemPrice], (err, result) => {
+        if (err) {
+            console.error('Error inserting Schedule:', err);
+            res.status(500).json({ message: 'Error saving Schedule', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+//-------------------------------------------------------------------------------------------
+
+app.post("/DeleteCustomer", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteCustomer(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Customer:', err);
+            res.status(500).json({ message: 'Error Deleting Customer', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteManager", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteManager(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Manager:', err);
+            res.status(500).json({ message: 'Error Deleting Manager', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteRestaurant", (req,res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteRestaurant(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting restaurant:', err);
+            res.status(500).json({ message: 'Error Deleting restaurant', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteAddress", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteAddress(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Address:', err);
+            res.status(500).json({ message: 'Error Deleting Address', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteItem", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteItem(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Item:', err);
+            res.status(500).json({ message: 'Error Deleting Item', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteSchedule", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteSchedule(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Schedule:', err);
+            res.status(500).json({ message: 'Error Deleting Schedule', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+//-------------------------------------------------------------------------------------------
+
+app.post("/GetCustomerById", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetCustomerById(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting Customer:', err);
+            res.status(500).json({ message: 'Error Getting Customer', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
+
+app.post("/GetManagerById", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetManagerById(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting Manager:', err);
+            res.status(500).json({ message: 'Error Getting Manager', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
+   
+app.post("/GetAddressByCustomerId", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetAddressByCustomerId(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting Address:', err);
+            res.status(500).json({ message: 'Error Getting Address', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
+
+app.post("/GetOrderById", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetOrderById(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting Order:', err);
+            res.status(500).json({ message: 'Error Getting Order', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
+//-------------------------------------------------------------------------------------------
 
 app.get("/AllRestaurants", (req, res) =>{
 
