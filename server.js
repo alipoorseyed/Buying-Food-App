@@ -409,6 +409,26 @@ app.post("/UpdateSchedule", (req, res) =>{
 });
 
 
+app.post("/DeleteCustomer", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteCustomer(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Customer:', err);
+            res.status(500).json({ message: 'Error Deleting Customer', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
 app.get("/AllRestaurants", (req, res) =>{
 
     db.execute('CALL SelectAllRestaurant()', (err, results) => {
