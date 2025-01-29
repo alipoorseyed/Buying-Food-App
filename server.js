@@ -429,6 +429,47 @@ app.post("/DeleteCustomer", (req, res) =>{
 });
 
 
+app.post("/DeleteManager", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteManager(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Manager:', err);
+            res.status(500).json({ message: 'Error Deleting Manager', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteRestaurant", (req,res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+
+    db.execute('CALL UpdateRestaurant(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting restaurant:', err);
+            res.status(500).json({ message: 'Error Deleting restaurant', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
 app.get("/AllRestaurants", (req, res) =>{
 
     db.execute('CALL SelectAllRestaurant()', (err, results) => {
