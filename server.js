@@ -457,7 +457,7 @@ app.post("/DeleteRestaurant", (req,res) =>{
     }
 
 
-    db.execute('CALL UpdateRestaurant(?)', [id], (err, result) => {
+    db.execute('CALL DeleteRestaurant(?)', [id], (err, result) => {
         if (err) {
             console.error('Error Deleting restaurant:', err);
             res.status(500).json({ message: 'Error Deleting restaurant', error: err });
@@ -477,7 +477,7 @@ app.post("/DeleteAddress", (req, res) =>{
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL UpdateAddress(?)', [id], (err, result) => {
+    db.execute('CALL DeleteAddress(?)', [id], (err, result) => {
         if (err) {
             console.error('Error Deleting Address:', err);
             res.status(500).json({ message: 'Error Deleting Address', error: err });
@@ -504,6 +504,26 @@ app.post("/DeleteItem", (req, res) =>{
         } else {
             res.status(201).json({
                 result
+            });
+        }
+    });
+});
+
+
+app.post("/DeleteSchedule", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL DeleteSchedule(?,?,?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Deleting Schedule:', err);
+            res.status(500).json({ message: 'Error Deleting Schedule', error: err });
+        } else {
+            res.status(201).json({
+                ScheduleId: result[0][0].Id
             });
         }
     });
