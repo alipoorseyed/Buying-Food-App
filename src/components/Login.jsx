@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import AppPng from "../assets/App.png";
+import { useRoleContext } from "../hooks/RoleContext";
+
 
 const Login = () => {
   const { Role } = useParams();
   const navigate = useNavigate();
+  const {setrole} = useRoleContext();
+
 
   const [email, setEmail] = useState(""); // State for email input
   const [password, setPassword] = useState(""); // State for password input
@@ -14,11 +19,29 @@ const Login = () => {
     setter(e.target.value); // Generic function to handle input changes
   };
 
-  const handlebutton = () => {
+  const handlebutton = async () => {
     if(email.trim() === '' || password.trim() === ''){
       alert("ایمیل یا پسوورد نمی تواند خالی باشد");
       return;
     }
+
+     try {
+       const response = await axios.post(`http://localhost:3000/Login/${Role}`, { email, password });
+       console.log(response);
+       localStorage.setItem("Role" , Role +"-" + response.data.CustomerId );
+       setrole(Role +"-" + response.data.CustomerId);
+       if(Role === "Customer"){
+        navigate("/UserMainPage");
+       }else if (Role === "Manager"){
+        navigate("")
+       }
+
+      // Handle success (e.g., save data to state)
+     } catch (error) {
+      console.error('Error logging in:', error);
+      alert("نام کاربری یا رمز عبور اشتباه است . ")
+      // Handle error
+       }
   }
 
   return (
@@ -55,7 +78,7 @@ const Login = () => {
               className="w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2  focus:ring-pink-500 bg-white"
             />
           </div>
-          {Role !== "admin" ? (
+          {Role !== "Admin" ? (
             <p onClick={() => navigate(`/SignUp/${Role}`)} className="cursor-pointer mb-4 text-pink-600 hover:underline">
               هنوز ثبت نام نکردی ؟
             </p>
