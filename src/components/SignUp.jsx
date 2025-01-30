@@ -1,37 +1,70 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AppPng from "../assets/App.png";
+import axios from "axios";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const {Role} = useParams();
 
   const [name, setName] = useState(""); // State for name input
   const [family, setFamily] = useState(""); // State for family input
   const [email, setEmail] = useState(""); // State for email input
   const [password, setPassword] = useState(""); // State for password input
   const [number, setNumber] = useState(""); // State for number input
+  const [address , setAddress] = useState("");
+  const [city , setCity] = useState("");
   const [passwordHidden, setPasswordHidden] = useState(true); // State for password visibility
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value); // Generic function to handle input changes
   };
 
-  const handleSignUp = () => {
+
+  const handleSignUp = async () => {
+    // Validate required fields
     if (
       name.trim() === "" ||
       family.trim() === "" ||
       email.trim() === "" ||
       password.trim() === "" ||
-      number.trim() === ""
+      number.trim() === "" ||
+      (Role === "Customer" && (city.trim() === "" || address.trim() === ""))
     ) {
       alert("لطفا تمامی فیلدها را پر کنید");
       return;
     }
-
-    // Handle successful signup logic here
-    alert("ثبت نام با موفقیت انجام شد");
-    navigate("/Login");
+  
+    // Prepare data for the API
+    const payload = {
+      email: email,
+      name: name,
+      familyName: family,
+      password: password,
+      phoneNumber: number,
+    };
+  
+    // Add address and city if Role is Customer
+    if (Role === "Customer") {
+      payload.address = address;
+      payload.city = city;
+    }
+  
+    try {
+      // Send POST request
+      const response = await axios.post(`http://localhost:3000/SignUp/${Role}`, payload);
+      console.log(response);
+      
+      // Handle success
+      alert("ثبت نام با موفقیت انجام شد");
+      navigate(`/Login/${Role}`);
+    } catch (error) {
+      // Handle error
+      console.error("Error signing up:", error);
+      alert("مشکلی در ثبت نام رخ داده است");
+    }
   };
+  
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -113,6 +146,42 @@ const SignUp = () => {
               className="w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white"
             />
           </div>
+
+          {
+            Role === "Customer" ?
+            (
+              <>
+              <div className="relative mb-4 w-80">
+            <span className="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500">
+            location_on
+            </span>
+            <input
+              value={address}
+              onChange={handleInputChange(setAddress)}
+              placeholder="آدرس خود را وارد کنید"
+              type="text"
+              className="w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white"
+            />
+          </div>
+
+
+
+          <div className="relative mb-4 w-80">
+            <span className="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500">
+            location_city
+            </span>
+            <input
+              value={city}
+              onChange={handleInputChange(setCity)}
+              placeholder="شهر خود را وارد کنید"
+              type="text"
+              className="w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white"
+            />
+          </div>
+
+              </>              
+            ) : null
+          }
 
           <button
             onClick={handleSignUp}

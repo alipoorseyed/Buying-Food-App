@@ -13,21 +13,21 @@ export const ChooseRolePage = () => {
       <div className="flex justify-center items-stretch gap-16">
         <div className="flex flex-col justify-center items-center gap-6">
           <div
-            onClick={() => navigate("/Login/customer")}
+            onClick={() => navigate("/Login/Customer")}
             className="flex flex-col justify-center items-center p-3 gap-2 rounded-xl bg-slate-200 border-2 border-gray-400 cursor-pointer transition-transform hover:scale-110"
           >
             <img className="w-32" src={UserPng} alt="User" />
             <p>کاربر عادی</p>
           </div>
           <div
-            onClick={() => navigate("/Login/manager")}
+            onClick={() => navigate("/Login/Manager")}
             className="flex flex-col justify-center items-center p-3 gap-2 rounded-xl bg-slate-200 border-2 border-gray-400 cursor-pointer transition-transform hover:scale-110"
           >
             <img className="w-32" src={ResturantManagerPng} alt="Manager" />
             <p>مدیر رستوران</p>
           </div>
           <div
-            onClick={() => navigate("/Login/admin")}
+            onClick={() => navigate("/Login/Admin")}
             className="flex flex-col justify-center items-center p-3 gap-2 rounded-xl bg-slate-200 border-2 border-gray-400 cursor-pointer transition-transform hover:scale-110"
           >
             <img className="w-32" src={AdminPng} alt="Admin" />
