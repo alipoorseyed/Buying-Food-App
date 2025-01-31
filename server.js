@@ -690,7 +690,7 @@ app.post("/GetRestaurantByManagerId", (req, res) => {
     const { ManagerId } = req.body;
 
     if (!ManagerId) {
-        return res.status(400).json({ message: "RestaurantId is required" });
+        return res.status(400).json({ message: "ManagerId is required" });
     }
 
     db.execute("CALL GetRestaurantByManagerId(?)", [ManagerId], (err, result) => {
@@ -700,6 +700,27 @@ app.post("/GetRestaurantByManagerId", (req, res) => {
         } else {
             if (result[0].length === 0) {
                 return res.status(404).json({ message: "Restaurant not found" });
+            }
+            res.status(200).json(result[0][0]);
+        }
+    });
+});
+
+
+app.post("/GetScheduleByRestaurantId", (req, res) => {
+    const { RestaurantId } = req.body;
+
+    if (!RestaurantId) {
+        return res.status(400).json({ message: "RestaurantId is required" });
+    }
+
+    db.execute("CALL GetScheduleByRestaurantId(?)", [RestaurantId], (err, result) => {
+        if (err) {
+            console.error("Error Getting Schedule:", err);
+            res.status(500).json({ message: "Error Getting Schedule", error: err });
+        } else {
+            if (result[0].length === 0) {
+                return res.status(404).json({ message: "Schedule not found" });
             }
             res.status(200).json(result[0][0]);
         }
