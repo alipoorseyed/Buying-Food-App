@@ -313,11 +313,13 @@ app.post("/PlaceOrder", (req, res) =>{
     const {CustomerId, RestaurantId, AddressId, OrderExplantion, itemNumber, ItemDetails} = req.body;
     const today = new Date().toISOString().split('T')[0];
 
-    if (!CustomerId || !RestaurantId || !AddressId  || itemNumber) {
+    if (!CustomerId || !RestaurantId || !AddressId  || !itemNumber) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL PlaceOrder(?,?,?,?,?,?,?)', [CustomerId, RestaurantId, AddressId, OrderExplantion, today, itemNumber,ItemDetails], (err, result) => {
+    let orderId;
+
+    db.execute('CALL PlaceOrder(?,?,?,?,?,?)', [CustomerId, RestaurantId, AddressId, OrderExplantion, today, itemNumber], (err, result) => {
         if (err) {
             console.error('Error placing order :', err);
             res.status(500).json({ message: 'Error placing order', error: err });
@@ -326,7 +328,23 @@ app.post("/PlaceOrder", (req, res) =>{
                 result
             });
         }
+        orderId = result[0][0].id;
     });
+
+    
+    for (const object in ItemDetails) {
+        db.execute('INSERT INTO `item&order` (OrderId, ItemId, quantity)', [orderId, object.id, object.quantity], (err, resultt) => {
+            if (err) {
+                console.error('Error placing order :', err);
+                res.status(500).json({ message: 'Error placing order', error: err });
+            } else {
+                res.status(201).json({
+                    resultt
+                });
+            }
+        });
+    }
+
 });
 
 //-------------------------------------------------------------------------------------------
