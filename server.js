@@ -308,6 +308,27 @@ app.post("/AddCategory", (req, res) =>{
     });
 });
 
+
+app.post("/AddCategory", (req, res) =>{
+    const {CustomerId, RestaurantId, AddressId, OrderExplantion, OrderDate ,itemNumber} = req.body;
+    const today = new Date().toISOString().split('T')[0];
+
+    if (!CustomerId || !RestaurantId || !AddressId  || itemNumber) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL PlaceOrder(?)', [CustomerId, RestaurantId, AddressId, OrderExplantion, OrderDate ,itemNumber], (err, result) => {
+        if (err) {
+            console.error('Error placing order :', err);
+            res.status(500).json({ message: 'Error placing order', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
 //-------------------------------------------------------------------------------------------
 
 app.post("/UpdateCustomer", (req, res) =>{
@@ -411,13 +432,13 @@ app.post("/UpdateAddress", (req, res) =>{
 
 
 app.post("/UpdateItem", (req, res) =>{
-    const {id, RestaurantId, ItemName, ItemPrice} = req.body;
+    const {id, RestaurantId, ItemName, ItemPrice, Category} = req.body;
 
-    if (!id || !RestaurantId || !ItemName || !ItemPrice) {
+    if (!id || !RestaurantId || !ItemName || !ItemPrice || !Category) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL UpdateItem(?,?,?,?)', [id, RestaurantId, ItemName, ItemPrice], (err, result) => {
+    db.execute('CALL UpdateItem(?,?,?,?,?)', [id, RestaurantId, ItemName, ItemPrice, Category], (err, result) => {
         if (err) {
             console.error('Error Updating Item:', err);
             res.status(500).json({ message: 'Error Updating Item', error: err });
