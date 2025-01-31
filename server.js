@@ -270,13 +270,13 @@ app.post("/AddItem", (req, res) =>{
 
 
 app.post("/AddSchedule", (req, res) =>{
-    const {RestaurantId, ItemName, ItemPrice} = req.body;
+    const {RestaurantId, WeekDay, WorkingTime} = req.body;
 
-    if (!RestaurantId || !ItemName || !ItemPrice) {
+    if (!RestaurantId || !WeekDay || !WorkingTime) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL AddSchedule(?,?,?)', [RestaurantId, ItemName, ItemPrice], (err, result) => {
+    db.execute('CALL AddSchedule(?,?,?)', [RestaurantId, WeekDay, WorkingTime], (err, result) => {
         if (err) {
             console.error('Error inserting Schedule:', err);
             res.status(500).json({ message: 'Error saving Schedule', error: err });
