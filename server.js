@@ -652,7 +652,7 @@ app.post("/GetRestaurantByManagerId", (req, res) => {
         return res.status(400).json({ message: "RestaurantId is required" });
     }
 
-    db.execute("CALL GetRestaurantById(?)", [ManagerId], (err, result) => {
+    db.execute("CALL GetRestaurantByManagerId(?)", [ManagerId], (err, result) => {
         if (err) {
             console.error("Error Getting Restaurant:", err);
             res.status(500).json({ message: "Error Getting Restaurant", error: err });
