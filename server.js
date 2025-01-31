@@ -332,7 +332,7 @@ app.post("/PlaceOrder", (req, res) =>{
     });
 
     
-    for (const object in ItemDetails) {
+    for (const object of ItemDetails) {
         db.execute('INSERT INTO `item&order` (OrderId, ItemId, quantity)', [orderId, object.id, object.quantity], (err, resultt) => {
             if (err) {
                 console.error('Error placing order :', err);
