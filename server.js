@@ -605,7 +605,7 @@ app.post("/GetCustomerById", (req, res) =>{
             console.error('Error Getting Customer:', err);
             res.status(500).json({ message: 'Error Getting Customer', error: err });
         } else {
-            res.status(201).json(result[0]);
+            res.status(201).json(result[0][0]);
         }
     });
 });
@@ -623,7 +623,7 @@ app.post("/GetManagerById", (req, res) =>{
             console.error('Error Getting Manager:', err);
             res.status(500).json({ message: 'Error Getting Manager', error: err });
         } else {
-            res.status(201).json(result[0]);
+            res.status(201).json(result[0][0]);
         }
     });
 });
@@ -641,7 +641,7 @@ app.post("/GetAddressByCustomerId", (req, res) =>{
             console.error('Error Getting Address:', err);
             res.status(500).json({ message: 'Error Getting Address', error: err });
         } else {
-            res.status(201).json(result[0]);
+            res.status(201).json(result[0][0]);
         }
     });
 });
@@ -659,7 +659,7 @@ app.post("/GetOrderById", (req, res) =>{
             console.error('Error Getting Order:', err);
             res.status(500).json({ message: 'Error Getting Order', error: err });
         } else {
-            res.status(201).json(result[0]);
+            res.status(201).json(result[0][0]);
         }
     });
 });
@@ -677,9 +677,6 @@ app.post("/GetRestaurantById", (req, res) => {
             console.error("Error Getting Restaurant:", err);
             res.status(500).json({ message: "Error Getting Restaurant", error: err });
         } else {
-            if (result[0].length === 0) {
-                return res.status(404).json({ message: "Restaurant not found" });
-            }
             res.status(200).json(result[0][0]);
         }
     });
@@ -698,9 +695,6 @@ app.post("/GetRestaurantByManagerId", (req, res) => {
             console.error("Error Getting Restaurant:", err);
             res.status(500).json({ message: "Error Getting Restaurant", error: err });
         } else {
-            if (result[0].length === 0) {
-                return res.status(404).json({ message: "Restaurant not found" });
-            }
             res.status(200).json(result[0][0]);
         }
     });
@@ -719,9 +713,6 @@ app.post("/GetScheduleByRestaurantId", (req, res) => {
             console.error("Error Getting Schedule:", err);
             res.status(500).json({ message: "Error Getting Schedule", error: err });
         } else {
-            if (result[0].length === 0) {
-                return res.status(404).json({ message: "Schedule not found" });
-            }
             res.status(200).json(result[0][0]);
         }
     });
