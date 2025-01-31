@@ -720,6 +720,18 @@ app.get("/AllRestaurants", (req, res) =>{
 });
 
 
+app.get("/AllCustomers", (req, res) =>{
+
+    db.execute('CALL SelectAllCustomer()', (err, results) => {
+        if (err) {
+            console.error('Error getting customers:', err);
+            return res.status(500).json({ message: 'Error getting customers', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
 app.get("/GetAllCategories", (req, res) =>{
 
     db.execute('CALL GetAllCategories()', (err, results) => {
