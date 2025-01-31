@@ -8,14 +8,14 @@ const ResturantItem = ({ id, price, name, imagesrc, updateSelectedItems }) => {
   const handlePlus = () => {
     const newCount = count + 1;
     setCount(newCount);
-    updateSelectedItems(id, newCount);
+    updateSelectedItems(id, newCount , name);
   };
 
   const handleMinus = () => {
     if (count > 0) {
       const newCount = count - 1;
       setCount(newCount);
-      updateSelectedItems(id, newCount);
+      updateSelectedItems(id, newCount , name);
     }
   };
 

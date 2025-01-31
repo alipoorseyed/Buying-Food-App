@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ResturantComponent from "./ResturantComponent";
+import { useRoleContext } from "../hooks/RoleContext";
 
 const UserMainPage = () => {
     const [restaurants, setRestaurants] = useState([]); // ✅ Store data in state
+    const { role } = useRoleContext()
 
     useEffect(() => {
+        console.log(role);
+        
         getResturant();
     }, []);
 

@@ -3,9 +3,21 @@ import ResturantManagerPng from "../assets/ResturantManager.png";
 import AdminPng from "../assets/Admin.png";
 import AppPng from "../assets/App.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const ChooseRolePage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const respon = localStorage.getItem("Role");
+    if(respon){
+      if(respon.split("-")[0] === "Customer"){
+        navigate(`/UserMainPage`);
+      }else if(respon.split("-")[0] === "Manager"){
+        navigate(`/ManagerMainPage`);
+      }
+    }
+  },[])
 
   return (
     <div>
