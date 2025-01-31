@@ -718,6 +718,24 @@ app.post("/GetScheduleByRestaurantId", (req, res) => {
     });
 });
 
+
+app.post("/GetCustomerOrderHistory", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetCustomerOrderHistory(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting Customer order history:', err);
+            res.status(500).json({ message: 'Error Getting Customer order history', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
 //-------------------------------------------------------------------------------------------
 
 app.get("/AllRestaurants", (req, res) =>{
