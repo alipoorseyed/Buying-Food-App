@@ -641,7 +641,7 @@ app.post("/GetAddressByCustomerId", (req, res) =>{
             console.error('Error Getting Address:', err);
             res.status(500).json({ message: 'Error Getting Address', error: err });
         } else {
-            res.status(201).json(result[0][0]);
+            res.status(201).json(result[0]);
         }
     });
 });
@@ -659,7 +659,7 @@ app.post("/GetOrderById", (req, res) =>{
             console.error('Error Getting Order:', err);
             res.status(500).json({ message: 'Error Getting Order', error: err });
         } else {
-            res.status(201).json(result[0][0]);
+            res.status(201).json(result[0]);
         }
     });
 });
