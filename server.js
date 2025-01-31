@@ -309,42 +309,35 @@ app.post("/AddCategory", (req, res) =>{
 });
 
 
-app.post("/PlaceOrder", (req, res) =>{
-    const {CustomerId, RestaurantId, AddressId, OrderExplantion, itemNumber, ItemDetails} = req.body;
-    const today = new Date().toISOString().split('T')[0];
-
-    if (!CustomerId || !RestaurantId || !AddressId  || !itemNumber) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    let orderId;
-
-    db.execute('CALL PlaceOrder(?,?,?,?,?,?)', [CustomerId, RestaurantId, AddressId, OrderExplantion, today, itemNumber], (err, result) => {
-        if (err) {
-            console.error('Error placing order :', err);
-            res.status(500).json({ message: 'Error placing order', error: err });
-        } else {
-            res.status(201).json({
-                result
-            });
-        }
-        orderId = result[0][0].id;
-    });
-
-    
-    for (const object of ItemDetails) {
-        db.execute('INSERT INTO `item&order` (OrderId, ItemId, quantity)', [orderId, object.id, object.quantity], (err, resultt) => {
-            if (err) {
-                console.error('Error placing order :', err);
-                res.status(500).json({ message: 'Error placing order', error: err });
-            } else {
-                res.status(201).json({
-                    resultt
-                });
-            }
-        });
-    }
-
+app.post("/PlaceOrder", async (req, res) => {  
+    const { CustomerId, RestaurantId, AddressId, OrderExplantion, itemNumber, ItemDetails } = req.body;  
+    const today = new Date().toISOString().split('T')[0];  
+  
+    if (!CustomerId || !RestaurantId || !AddressId || !itemNumber) {  
+        return res.status(400).json({ message: 'All fields are required' });  
+    }  
+ 
+    try { 
+        const [result] = await db.promise().execute('CALL PlaceOrder(?,?,?,?,?,?)',  
+            [CustomerId, RestaurantId, AddressId, OrderExplantion, today, itemNumber]); 
+ 
+        let orderId = result[0][0].id; 
+ 
+        const insertPromises = ItemDetails.map(item => { 
+            return db.promise().execute( 
+                'INSERT INTO item&order (OrderId, ItemId, quantity) VALUES (?, ?, ?)',  
+                [orderId, item.id, item.quantity] 
+            ); 
+        }); 
+ 
+        await Promise.all(insertPromises); 
+ 
+        res.status(201).json({ message: "Order placed successfully", orderId }); 
+ 
+    } catch (err) { 
+        console.error('Error placing order:', err); 
+        res.status(500).json({ message: 'Error placing order', error: err }); 
+    } 
 });
 
 //-------------------------------------------------------------------------------------------
@@ -748,6 +741,24 @@ app.post("/GetCustomerOrderHistory", (req, res) =>{
         if (err) {
             console.error('Error Getting Customer order history:', err);
             res.status(500).json({ message: 'Error Getting Customer order history', error: err });
+        } else {
+            res.status(201).json(result[0]);
+        }
+    });
+});
+
+
+app.post("/GetRestaurantOrderHistory", (req, res) =>{
+    const {id} = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL GetRestaurantOrderHistory(?)', [id], (err, result) => {
+        if (err) {
+            console.error('Error Getting  Restaurant order history:', err);
+            res.status(500).json({ message: 'Error Getting Restaurant order history', error: err });
         } else {
             res.status(201).json(result[0]);
         }
