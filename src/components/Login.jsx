@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import AppPng from "../assets/App.png";
@@ -15,6 +15,18 @@ const Login = () => {
   const [password, setPassword] = useState(""); // State for password input
   const [passwordHidden, setPasswordHidden] = useState(true); // State for password visibility
 
+
+   useEffect(() => {
+    const respon = localStorage.getItem("Role");
+    if(respon){
+      if(respon.split("-")[0] === "Customer"){
+        navigate(`/UserMainPage`);
+      }else if(respon.split("-")[0] === "Manager"){
+        navigate(`/ManagerMainPage`);
+      }
+    }
+  },[])
+
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value); // Generic function to handle input changes
   };
@@ -28,12 +40,14 @@ const Login = () => {
      try {
        const response = await axios.post(`http://localhost:3000/Login/${Role}`, { email, password });
        console.log(response);
-       localStorage.setItem("Role" , Role +"-" + response.data.CustomerId );
-       setrole(Role +"-" + response.data.CustomerId);
        if(Role === "Customer"){
+        localStorage.setItem("Role" , Role +"-" + response.data.CustomerId );
+        setrole(Role +"-" + response.data.CustomerId);
         navigate("/UserMainPage");
        }else if (Role === "Manager"){
-        navigate("")
+        localStorage.setItem("Role" , Role +"-" + response.data.ManagerId );
+        setrole(Role +"-" + response.data.ManagerId);
+        navigate("/ManagerMainPage");
        }
 
       // Handle success (e.g., save data to state)
