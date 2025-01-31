@@ -732,6 +732,18 @@ app.get("/AllCustomers", (req, res) =>{
 });
 
 
+app.get("/AllManagers", (req, res) =>{
+
+    db.execute('CALL SelectAllManager()', (err, results) => {
+        if (err) {
+            console.error('Error getting managers:', err);
+            return res.status(500).json({ message: 'Error getting managers', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
 app.get("/GetAllCategories", (req, res) =>{
 
     db.execute('CALL GetAllCategories()', (err, results) => {
