@@ -5,6 +5,8 @@ import axios from "axios";
 const BuyingFinalPage = () => {
     const location = useLocation();
     const { BuyingItem, Resturant } = location.state || {};  // Ensure no errors if state is undefined
+    console.log(BuyingItem);
+    
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState([]);
     const [newAddress, setNewAddress] = useState("");
@@ -42,10 +44,18 @@ const BuyingFinalPage = () => {
         }
     };
 
+    
+
     const handleSelectAddress = async (address) => {
+        const id = localStorage.getItem("Role").split("-")[1];
         setSelectedAddress(address);
         try {
-            await axios.post("http://localhost:3000/setPrimaryAddress", { address  });
+            const response = await axios.post("http://localhost:3000/UpdateCustomerAddress", {
+               id : id,
+               address : selectedAddress 
+             });
+             console.log(response);
+             
         } catch (error) {
             console.error("Error updating primary address:", error);
         }
