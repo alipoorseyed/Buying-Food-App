@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import mysql2 from "mysql2";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -26,7 +26,7 @@ db.connect((err) => {
     console.log('Connected to the database as id ' + db.threadId);
 });
 
-db.query('CALL GetCustomerById(?)', [1], (err, results) => {
+db.query('CALL GetCustomerById(?)', [2], (err, results) => {
     if (err) {
         console.error('Error executing stored procedure: ' + err.stack);
         return;
@@ -301,6 +301,26 @@ app.post("/UpdateCustomer", (req, res) =>{
         if (err) {
             console.error('Error updating Customer:', err);
             res.status(500).json({ message: 'Error updating Customer', error: err });
+        } else {
+            res.status(201).json({
+                result
+            });
+        }
+    });
+});
+
+
+app.post("/UpdateCustomerAddress", (req, res) =>{
+    const {id, address} = req.body;
+
+    if (!id || !address) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL UpdateCustomerAddress(?,?)', [id, address], (err, result) => {
+        if (err) {
+            console.error('Error updating Customer Address:', err);
+            res.status(500).json({ message: 'Error updating Customer Address', error: err });
         } else {
             res.status(201).json({
                 result
@@ -603,6 +623,48 @@ app.post("/GetOrderById", (req, res) =>{
     });
 });
 
+
+app.post("/GetRestaurantById", (req, res) => {
+    const { RestaurantId } = req.body;
+
+    if (!RestaurantId) {
+        return res.status(400).json({ message: "RestaurantId is required" });
+    }
+
+    db.execute("CALL GetRestaurantById(?)", [RestaurantId], (err, result) => {
+        if (err) {
+            console.error("Error Getting Restaurant:", err);
+            res.status(500).json({ message: "Error Getting Restaurant", error: err });
+        } else {
+            if (result[0].length === 0) {
+                return res.status(404).json({ message: "Restaurant not found" });
+            }
+            res.status(200).json(result[0][0]);
+        }
+    });
+});
+
+
+app.post("/GetRestaurantByManagerId", (req, res) => {
+    const { ManagerId } = req.body;
+
+    if (!ManagerId) {
+        return res.status(400).json({ message: "RestaurantId is required" });
+    }
+
+    db.execute("CALL GetRestaurantById(?)", [ManagerId], (err, result) => {
+        if (err) {
+            console.error("Error Getting Restaurant:", err);
+            res.status(500).json({ message: "Error Getting Restaurant", error: err });
+        } else {
+            if (result[0].length === 0) {
+                return res.status(404).json({ message: "Restaurant not found" });
+            }
+            res.status(200).json(result[0][0]);
+        }
+    });
+});
+
 //-------------------------------------------------------------------------------------------
 
 app.get("/AllRestaurants", (req, res) =>{
@@ -617,13 +679,17 @@ app.get("/AllRestaurants", (req, res) =>{
 });
 
 
-app.get("/GetItemsOFResturant", (req, res) =>{
-    const restaurantId = req.body;
+app.post("/GetItemsOFResturant", (req, res) => {
+    const { ResturantId } = req.body;
 
-    db.execute('CALL GetItemsOfRestaurant(?)', [restaurantId], (err, results) => {
+    if (!ResturantId) {
+        return res.status(400).json({ message: "ResturantId is required" });
+    }
+
+    db.execute("CALL GetItemsOFResturant(?)", [ResturantId], (err, results) => {
         if (err) {
-            console.error('Error getting items for restaurant:', err);
-            return res.status(500).json({ message: 'Error getting items', error: err });
+            console.error("Error getting items for restaurant:", err);
+            return res.status(500).json({ message: "Error getting items", error: err });
         }
         res.status(200).json(results[0]);
     });
