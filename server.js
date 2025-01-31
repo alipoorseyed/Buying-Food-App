@@ -713,7 +713,7 @@ app.post("/GetScheduleByRestaurantId", (req, res) => {
             console.error("Error Getting Schedule:", err);
             res.status(500).json({ message: "Error Getting Schedule", error: err });
         } else {
-            res.status(200).json(result[0][0]);
+            res.status(200).json(result[0]);
         }
     });
 });
