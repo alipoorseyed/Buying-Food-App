@@ -288,6 +288,26 @@ app.post("/AddSchedule", (req, res) =>{
     });
 });
 
+
+app.post("/AddCategory", (req, res) =>{
+    const {Category} = req.body;
+
+    if (!Category) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    db.execute('CALL AddCategory(?)', [Category], (err, result) => {
+        if (err) {
+            console.error('Error inserting Categorye:', err);
+            res.status(500).json({ message: 'Error saving Category', error: err });
+        } else {
+            res.status(201).json({
+                ScheduleId: result[0][0].Id
+            });
+        }
+    });
+});
+
 //-------------------------------------------------------------------------------------------
 
 app.post("/UpdateCustomer", (req, res) =>{
@@ -673,6 +693,18 @@ app.get("/AllRestaurants", (req, res) =>{
         if (err) {
             console.error('Error getting restaurants:', err);
             return res.status(500).json({ message: 'Error getting restaurants', error: err });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+
+app.get("/GetAllCategories", (req, res) =>{
+
+    db.execute('CALL GetAllCategories()', (err, results) => {
+        if (err) {
+            console.error('Error getting Categories:', err);
+            return res.status(500).json({ message: 'Error getting Categories', error: err });
         }
         res.status(200).json(results[0]);
     });
