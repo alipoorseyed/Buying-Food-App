@@ -250,13 +250,13 @@ app.post("/AddManager", (req, res) =>{
 
 
 app.post("/AddItem", (req, res) =>{
-    const {RestaurantId, ItemName, ItemPrice} = req.body;
+    const {RestaurantId, ItemName, ItemPrice, Category} = req.body;
 
-    if (!RestaurantId || !ItemName || !ItemPrice) {
+    if (!RestaurantId || !ItemName || !ItemPrice || !Category) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    db.execute('CALL AddItem(?,?,?)', [RestaurantId, ItemName, ItemPrice], (err, result) => {
+    db.execute('CALL AddItem(?,?,?,?)', [RestaurantId, ItemName, ItemPrice, Category], (err, result) => {
         if (err) {
             console.error('Error inserting Item:', err);
             res.status(500).json({ message: 'Error saving Item', error: err });
