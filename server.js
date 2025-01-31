@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const db = mysql2.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'oppon12I#',
+    password: 'Hedie231182',
     database: 'db-project'
 });
 
@@ -605,7 +605,7 @@ app.post("/GetCustomerById", (req, res) =>{
             console.error('Error Getting Customer:', err);
             res.status(500).json({ message: 'Error Getting Customer', error: err });
         } else {
-            res.status(201).json(result[0][0]);
+            res.status(201).json(result[0]);
         }
     });
 });
@@ -623,7 +623,7 @@ app.post("/GetManagerById", (req, res) =>{
             console.error('Error Getting Manager:', err);
             res.status(500).json({ message: 'Error Getting Manager', error: err });
         } else {
-            res.status(201).json(result[0][0]);
+            res.status(201).json(result[0]);
         }
     });
 });
