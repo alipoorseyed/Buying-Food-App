@@ -1,42 +1,41 @@
-import { useLocation } from "react-router-dom";
+import { useLocation , useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const BuyingFinalPage = () => {
     const location = useLocation();
-    const { BuyingItem, Resturant } = location.state || {};  // Ensure no errors if state is undefined
+    const navigate = useNavigate();
+    const { BuyingItem, Resturant } = location.state || {};
+    const id = localStorage.getItem("Role").split("-")[1];  // Ensure no errors if state is undefined
     console.log(BuyingItem);
+    console.log(Resturant);
     
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState([]);
     const [newAddress, setNewAddress] = useState("");
     const [newCity, setNewCity] = useState("");
+    const [orderNotes, setOrderNotes] = useState("");  // For order notes
     
-    
-
     useEffect(() => {
         fetchAddresses();
     }, []);
 
     const fetchAddresses = async () => {
-        const id = localStorage.getItem("Role").split("-")[1];
-        
-        
         try {
             const response = await axios.post("http://localhost:3000/GetAddressByCustomerId" , {
                 id : id,
             });
 
+            console.log(response);
+            
             const response2 = await axios.post("http://localhost:3000/GetCustomerById" , {
                 id : id,
-            });
-
+            }); 
 
             const newResponse = response.data.map((element) => {
                 return element.Address;
-            })
-            
-            
+            });
+
             setAddresses(newResponse);
             setSelectedAddress(response2.data[0].CustomerPrimaryAddress);
         } catch (error) {
@@ -44,42 +43,85 @@ const BuyingFinalPage = () => {
         }
     };
 
-    
-
     const handleSelectAddress = async (address) => {
-        const id = localStorage.getItem("Role").split("-")[1];
         setSelectedAddress(address);
         try {
             const response = await axios.post("http://localhost:3000/UpdateCustomerAddress", {
-               id : id,
-               address : selectedAddress 
-             });
-             console.log(response);
-             
+                id : id,
+                address : address 
+            });
+            console.log(response);
         } catch (error) {
             console.error("Error updating primary address:", error);
         }
     };
 
     const handleAddAddress = async () => {
-        const id = localStorage.getItem("Role").split("-")[1];
-        if (!newAddress.trim() && !newCity.trim()){
-            alert("تمام فیلد ها را پر کنید")
+        if (!newAddress.trim() && !newCity.trim()) {
+            alert("تمام فیلد ها را پر کنید");
             return;
         }
         try {
             const response = await axios.post("http://localhost:3000/AddAddress", {
-                CustomerId : id,
-                AddressCity : newCity , 
-                Address : newAddress
+                CustomerId: id,
+                AddressCity: newCity, 
+                Address: newAddress
             });
             console.log(response);
-            
             fetchAddresses();
-            setNewCity("")
+            setNewCity("");
             setNewAddress("");
         } catch (error) {
             console.error("Error adding new address:", error);
+        }
+    };
+
+    const handleFinalPurchase = async () => {
+        let counter = 0;
+        let items = [];
+        BuyingItem?.forEach((element) => {
+            counter += element.quantity; // Add the quantity to the counter
+            items.push({ id : element.id , quantity : element.quantity }); // Convert id to string and push it
+        });
+        let addressID = 0;
+        console.log(counter);
+        console.log(items);
+        console.log(orderNotes);
+        
+        
+
+        try {
+            const response1 = await axios.post("http://localhost:3000/GetAddressByCustomerId" , {
+                id : id,
+            });
+            response1.data.forEach((element) => {
+                if(element.Address === selectedAddress){
+                    addressID = element.AddressId;
+                }
+            });
+            console.log("addresssssssssss" + addressID);
+            
+            console.log(response1.data);
+            console.log(JSON.stringify(items));
+
+            console.log("HI" + "--------" + id + "------" + Resturant.RestaurantId + "-------" + addressID + "-------" + orderNotes + "-------" + counter + "--------" + items  );
+            
+            
+            
+            const response2 = await axios.post("http://localhost:3000/PlaceOrder", {
+                CustomerId: id,
+                RestaurantId : Resturant.RestaurantId,
+                AddressId : addressID,
+                OrderExplantion : orderNotes , 
+                itemNumber : counter , 
+                ItemDetails: items
+            });
+            console.log("Final purchase response:", response2);
+            alert("خرید نهایی با موفقیت انجام شد!");
+            navigate("/UserMainPage")
+        } catch (error) {
+            console.error("Error during final purchase:", error);
+            alert("خطا در خرید نهایی!");
         }
     };
 
@@ -133,6 +175,17 @@ const BuyingFinalPage = () => {
                     </button>
                 </div>
 
+                {/* فیلد توضیحات سفارش */}
+                <div className="mb-6 p-4 bg-gray-100 rounded-lg shadow">
+                    <textarea 
+                        value={orderNotes} 
+                        onChange={(e) => setOrderNotes(e.target.value)} 
+                        className="p-2 w-full border rounded" 
+                        placeholder="توضیحات سفارش را وارد کنید"
+                        rows="4"
+                    />
+                </div>
+
                 <ul className="space-y-4">
                     {BuyingItem?.map((item, index) => (
                         <li key={index} className="p-4 bg-pink-200 rounded-xl shadow-sm">
@@ -141,6 +194,16 @@ const BuyingFinalPage = () => {
                         </li>
                     ))}
                 </ul>
+
+                {/* دکمه خرید نهایی */}
+                <div className="mt-6">
+                    <button 
+                        onClick={handleFinalPurchase} 
+                        className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                    >
+                        خرید نهایی
+                    </button>
+                </div>
             </div>
         </div>
     );
