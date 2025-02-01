@@ -26,6 +26,20 @@ export const SideBar = () => {
         }
      }
 
+
+     const handleHomePage = () => {
+      const response = localStorage.getItem("Role");
+        if(response){
+          if(response.split("-")[0] === "Customer"){
+            navigate(`/UserMainPage`);
+          }else if(response.split("-")[0] === "Manager"){
+            navigate(`/ManagerMainPage`);
+          }
+        }else{
+          alert("ابتدا وارد شوید .")
+        }
+     }
+
      const changeThem = () => {
         if(them === "light"){
           localStorage.setItem("them","dark")
@@ -40,7 +54,7 @@ export const SideBar = () => {
   return (
     <div className="group fixed top-0 right-0 h-screen flex flex-col justify-between items-center bg-white transition-all duration-300 ease-in-out w-20 hover:w-44 pt-6 pb-6 gap-8">
       <div className="flex flex-col justify-center items-center gap-4">
-       <div className="flex justify-center items-center gap-4 cursor-pointer">
+       <div onClick={handleHomePage} className="flex justify-center items-center gap-4 cursor-pointer">
           <span className="material-icons text-black">home</span>
           <span className="hidden group-hover:block">صفحه اصلی</span>
         </div>
