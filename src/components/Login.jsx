@@ -44,10 +44,10 @@ const Login = () => {
       if(email === "Admin@gmail.com" && password === "Admin"){
         localStorage.setItem("Role" , Role );
         setrole(Role);
-        navigate("/AdminMainPage")
+        navigate("/AdminMainPage");
+        return;
       }else{
         alert("نام کاربری یا رمز عبور اشتباه است . ");
-        return;
       }
     }
 

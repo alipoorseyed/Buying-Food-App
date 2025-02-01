@@ -15,6 +15,8 @@ export const ChooseRolePage = () => {
         navigate(`/UserMainPage`);
       }else if(respon.split("-")[0] === "Manager"){
         navigate(`/ManagerMainPage`);
+      }else{
+        navigate('/AdminMainPage')
       }
     }
   },[])
