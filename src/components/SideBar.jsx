@@ -20,6 +20,8 @@ export const SideBar = () => {
             navigate(`/CustomerPersonal`);
           }else if(response.split("-")[0] === "Manager"){
             navigate(`/ManagerPersonal`);
+          }else{
+            alert("این ویژگی برای ادمین در دسترس نیست .")
           }
         }else{
           alert("ابتدا وارد شوید .")
@@ -34,6 +36,8 @@ export const SideBar = () => {
             navigate(`/UserMainPage`);
           }else if(response.split("-")[0] === "Manager"){
             navigate(`/ManagerMainPage`);
+          }else{
+            alert("این ویژگی برای ادمین در دسترس نیست .")
           }
         }else{
           alert("ابتدا وارد شوید .")
