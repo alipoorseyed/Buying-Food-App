@@ -23,6 +23,8 @@ const Login = () => {
         navigate(`/UserMainPage`);
       }else if(respon.split("-")[0] === "Manager"){
         navigate(`/ManagerMainPage`);
+      }else{
+        navigate('/AdminMainPage')
       }
     }
   },[])
@@ -35,6 +37,18 @@ const Login = () => {
     if(email.trim() === '' || password.trim() === ''){
       alert("ایمیل یا پسوورد نمی تواند خالی باشد");
       return;
+    }
+
+
+    if(Role === "Admin"){
+      if(email === "Admin@gmail.com" && password === "Admin"){
+        localStorage.setItem("Role" , Role );
+        setrole(Role);
+        navigate("/AdminMainPage")
+      }else{
+        alert("نام کاربری یا رمز عبور اشتباه است . ");
+        return;
+      }
     }
 
      try {

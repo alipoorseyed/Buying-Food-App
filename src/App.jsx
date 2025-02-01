@@ -9,6 +9,7 @@ import BuyingFinalPage from './components/BuyingFinalPage';
 import ManagerMainPage from './components/ManagerMainPage';
 import ManagerPersonal from './components/ManagerPersonal';
 import CustomerPersonal from './components/CustomerPersonal';
+import AdminMainPage from './components/AdminMainPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/ManagerMainPage' element={<ManagerMainPage />} />
           <Route path='/ManagerPersonal' element={<ManagerPersonal />} />
           <Route path='/CustomerPersonal' element={<CustomerPersonal />} />
+          <Route path='/AdminMainPage' element={<AdminMainPage />} />
         </Routes>
       </Router>
     </div>
