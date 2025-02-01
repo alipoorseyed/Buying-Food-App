@@ -158,15 +158,6 @@ app.post("/LogIn/Customer", (req, res) =>{
     });
 });
 
-
-app.post("/LogIn/Admin", (req, res) =>{
-    const {userName, password} = req.body
-
-    if(userName == 'admin' && password == "admin"){
-        res.status(201).json({ message: 'Login successfull'})
-    }
-});
-
 //-------------------------------------------------------------------------------------------
 
 app.post("/AddRestaurant", (req, res) =>{
