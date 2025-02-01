@@ -325,7 +325,7 @@ app.post("/PlaceOrder", async (req, res) => {
  
         const insertPromises = ItemDetails.map(item => { 
             return db.promise().execute( 
-                'INSERT INTO item&order (OrderId, ItemId, quantity) VALUES (?, ?, ?)',  
+                'INSERT INTO `item&order` (OrderId, ItemId, quantity) VALUES (?, ?, ?)',  
                 [orderId, item.id, item.quantity] 
             ); 
         }); 
