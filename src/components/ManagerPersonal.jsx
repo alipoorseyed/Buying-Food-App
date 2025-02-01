@@ -11,9 +11,6 @@ const ManagerPersonal = () => {
       <div className="p-4">
         <h1 className="text-xl font-bold mb-4">اطلاعات شخصی</h1>
         <div className="flex justify-start items-center gap-4 mb-6">
-          <button onClick={() => setState("AllOrder")} className="bg-gray-200 px-4 py-2 rounded">
-            لیست همه سفارش‌های رستوران
-          </button>
           <button onClick={() => setState("UpdateInfo")} className="bg-gray-200 px-4 py-2 rounded">
             آپدیت اطلاعات رستوران
           </button>
@@ -29,7 +26,6 @@ const ManagerPersonal = () => {
         </div>
   
         {/* نمایش کامپوننت بر اساس وضعیت state */}
-        {state === "AllOrder" && <div>نمایش لیست سفارشات</div>}
         {state === "UpdateInfo" && <UpdateRestaurantInfo />}
         {state === "UpdateHours" && <UpdateWorkingHours /> }
         {state === "UpdateMenu" && <UpdateMenuInfo />}
