@@ -73,9 +73,9 @@ node server.js
 
 If you have any suggestions or improvements, feel free to open an `Issue` or send a `Pull Request`. 🙌
 
-📧 **Email:** your-email@example.com
+📧 **Email:** poorseyedali40@gmail.com
 
-📌 **GitHub:** [GitHub Profile](https://github.com/YourUsername)
+📌 **GitHub:** [GitHub Profile](https://github.com/alipoorseyed)
 
 ---
 
