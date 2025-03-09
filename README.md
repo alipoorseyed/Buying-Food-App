@@ -15,7 +15,19 @@ A modern food ordering application built with **React, Node.js, and MySQL**
 
 ## 📸 Preview
 
+![Image](https://github.com/user-attachments/assets/97450964-3f08-418b-9979-a40513beb1e8)
 
+![Image](https://github.com/user-attachments/assets/5fbcd4ad-3a42-459d-aa86-9b81b70e07fe)
+
+![Image](https://github.com/user-attachments/assets/e15dbbba-9892-4a44-bfec-cf75cfc961a6)
+
+![Image](https://github.com/user-attachments/assets/94a70aa4-e28f-4556-a84f-1cc5151eb4d7)
+
+![Image](https://github.com/user-attachments/assets/907344f2-afa5-4b9a-9163-85923b67fbf6)
+
+![Image](https://github.com/user-attachments/assets/18131017-2b83-4302-8a27-03e4baed128f)
+
+![Image](https://github.com/user-attachments/assets/94310334-f4c2-4b9e-8fe2-6feaca77c13f)
 
 
 ---
