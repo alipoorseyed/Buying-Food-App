@@ -63,6 +63,7 @@ npm install
 
 ### 3️⃣ DataBase
 ```bash
+Enter the Information of your DataBase in example.env
 Import Dump.sql into your DataBase
 ```
 
