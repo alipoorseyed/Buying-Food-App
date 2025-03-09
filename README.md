@@ -53,7 +53,13 @@ cd backend
 npm install
 ```
 
-### 3️⃣ Run the project
+### 3️⃣ DataBase
+```bash
+Import Dump.sql into your DataBase
+```
+
+
+### 4️⃣ Run the project
 #### 🚀 Start frontend
 ```bash
 npm run dev
