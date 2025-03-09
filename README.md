@@ -10,6 +10,8 @@ A modern food ordering application built with **React, Node.js, and MySQL**
 - 🎨 **Styling:** Tailwind CSS
 - 🛠️ **Backend:** Node.js + Express
 - 🗄️ **Database:** MySQL
+- 🔒 **User Roles:** Admin, Restaurant Manager, Customer
+- 🛠️ **Admin Features:** Add/Delete Restaurants and Customers
 
 ---
 
@@ -28,6 +30,12 @@ A modern food ordering application built with **React, Node.js, and MySQL**
 ![Image](https://github.com/user-attachments/assets/18131017-2b83-4302-8a27-03e4baed128f)
 
 ![Image](https://github.com/user-attachments/assets/94310334-f4c2-4b9e-8fe2-6feaca77c13f)
+
+![Image](https://github.com/user-attachments/assets/6fa37ac3-53b8-495d-b1e8-ca2867862a3f)
+
+![Image](https://github.com/user-attachments/assets/fa4824ac-f249-44c7-91a4-57d2bc27fdb7)
+
+![Image](https://github.com/user-attachments/assets/da08e5ce-fc5f-4326-ae6f-f7b31824602a)
 
 
 ---
